@@ -1,0 +1,50 @@
+[
+    {
+        "title": "EULA",
+        "is_positive": true,
+        "prompt": "(((masterpiece))), ((best quality)), ((absurdres)), 8k uhd, ultra-detailed, cinematic lighting, intricate details. 1girl, solo, Eula, captured in a dynamic and elegant lunge pose, her elegant cryo-themed outfit with flowing coattails dramatically. She wields her iconic greatsword, emitting a (subtle, ethereal cryo-blue glow), casting soft cyan light on her face. (Glacial particles and shimmering ice crystals trail from the greatsword's path). Set in a frigid, mystical Dragonspine landscape under a full moon, dramatic interplay of light and shadow (chiaroscuro), swirling snowflakes. (detailed face, sharp focus), determined yet serene expression, piercing violet-blue eyes, glowing greatsword, detailed eyes, photorealistic skin texture with a hint of sweat.",
+        "image_path": "C:/COMFYUI/output/AI_00062_.png",
+        "is_negative": false,
+        "negative_prompt": ""
+    },
+    {
+        "title": "KANAO",
+        "is_positive": true,
+        "prompt": "(((masterpiece))), ((best quality)), ((absurdres)), 8k uhd, ultra-detailed, cinematic lighting, intricate details. 1girl, solo, Tsuyuri Kanao, captured in a dynamic and elegant lunge (tsuki pose), her white cape flowing dramatically. She wields her elegant pink Nichirin blade, emitting a (subtle, ethereal light pink glow), casting soft pink light on her face. (Luminous particles and glowing flower petals trail from the sword's path). Set in a serene cherry blossom garden under a full moon, dramatic interplay of light and shadow (chiaroscuro), floating petals. (detailed face, sharp focus), determined yet serene expression, piercing purple eyes, glowing katana, detailed eyes, photorealistic skin texture with a hint of sweat.",
+        "image_path": "C:/COMFYUI/output/AI_00001_.png",
+        "is_negative": false,
+        "negative_prompt": ""
+    },
+    {
+        "title": "KUKI SHINOBU",
+        "is_positive": true,
+        "prompt": "(((masterpiece))), ((best quality)), ((absurdres)), 8k uhd, ultra-detailed, cinematic lighting, intricate details. 1girl, solo, Kuki Shinobu, captured in a dynamic and elegant lunge (tsuki pose), her dark, form-fitting ninja attire with flowing purple sashes flowing dramatically. She wields her elegant electro-infused katana, emitting a (subtle, ethereal electro-violet glow), casting soft violet light on her face (partially covered by her mask). (Crackling lightning and glowing electro particles trail from the sword's path). Set in a dark, mystical Inazuman shrine at night, dramatic interplay of light and shadow (chiaroscuro), floating sakura petals and sparks of electricity. (detailed face, sharp focus), calm yet sharp expression, piercing green eyes, glowing katana, detailed eyes, photorealistic skin texture with a hint of sweat.",
+        "image_path": "C:/COMFYUI/output/AI_00068_.png",
+        "is_negative": false,
+        "negative_prompt": ""
+    },
+    {
+        "title": "MITSURI",
+        "is_positive": true,
+        "prompt": "(((masterpiece))), ((best quality)), ((absurdres)), 8k uhd, ultra-detailed, cinematic lighting, intricate details. 1girl, solo, Kanroji Mitsuri, captured in a dynamic and elegant lunge (tsuki pose), heart-patterned haori flowing dramatically. She wields her unique love-breathing Nichirin blade, emitting a (subtle, ethereal pink and green glow), casting soft light on her face. (Luminous particles and glowing hearts trail from the sword's path). Set in a bright, romantic cherry blossom garden under a full moon, dramatic interplay of light and shadow (chiaroscuro), floating petals. (detailed face, sharp focus), determined yet serene expression, piercing pink and green eyes, glowing katana, detailed eyes, photorealistic skin texture with a hint of sweat.",
+        "image_path": "C:/COMFYUI/output/AI_00043_.png",
+        "is_negative": false,
+        "negative_prompt": ""
+    },
+    {
+        "title": "SHINOBU",
+        "is_positive": true,
+        "prompt": "(((masterpiece))), ((best quality)), ((absurdres)), 8k uhd, ultra-detailed, cinematic lighting, intricate details. 1girl, solo, Kochou Shinobu, captured in a dynamic and elegant lunge (tsuki pose), butterfly-wing haori flowing dramatically. She wields her unique stinger-like Nichirin blade, emitting a (subtle, ethereal wisteria-purple glow), casting soft violet light on her face. (Luminous particles and glowing butterflies trail from the sword's path). Set in a dark, mystical wisteria garden under a full moon, dramatic interplay of light and shadow (chiaroscuro), floating embers. (detailed face, sharp focus), determined yet serene expression, piercing purple eyes, glowing katana, detailed eyes, photorealistic skin texture with a hint of sweat.",
+        "image_path": "C:/COMFYUI/output/AI_00033_.png",
+        "is_negative": true,
+        "negative_prompt": "embedding:lazyneg, lowres,bad anatomy,blurry,(worst quality:1.8),low quality,hands bad,(normal quality:1.3),bad hands,mutated hands and fingers,extra legs,extra arms,duplicate,cropped,jpeg,artifacts,long body,multiple breasts,mutated,disfigured,bad proportions,bad feet,ugly,text font ui,missing limb,monochrome,face bad, crown, tiara, jewelry, earring,pubes,pubic hair, censored,black bars, four legs,ugly hands,big earring,hoop earring,sleeves,collar,glasses, extra fingers,sunglasses, (hat:1.3),multiple hands, lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, artist name, deformed, disfigured, poor details, extra limbs, ugly, poorly drawn hands, missing limbs, floating limbs, disconnected limbs, malformed hands, out of focus, long neck, arm back, extra hand, extra arm, 6th finger, long body, extra katana, extra sword, extra Nichirin blade, nsfw."
+    },
+    {
+        "title": "RAIDEN SHOGUN",
+        "is_positive": true,
+        "prompt": "(((masterpiece))), ((best quality)), ((absurdres)), 8k uhd, ultra-detailed, cinematic lighting, intricate details. 1girl, solo, Raiden Shogun, captured in a dynamic and elegant lunge (tsuki pose), her elegant purple kimono flowing dramatically. She wields her iconic electro-infused katana, emitting a (subtle, ethereal electro-purple glow), casting soft violet light on her face. (Crackling lightning and glowing electro particles trail from the sword's path). Set in a dark, mystical Inazuman shrine under a stormy sky, dramatic interplay of light and shadow (chiaroscuro), floating sakura petals and sparks of electricity. (detailed face, sharp focus), determined yet serene expression, piercing purple eyes, glowing katana, detailed eyes, photorealistic skin texture with a hint of sweat.",
+        "image_path": "C:/COMFYUI/output/AI_00071_.png",
+        "is_negative": false,
+        "negative_prompt": ""
+    }
+]
