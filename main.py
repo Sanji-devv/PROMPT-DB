@@ -33,7 +33,7 @@ class PromptBankApp(QMainWindow):
         self.main_layout = QVBoxLayout(self.central_widget)
         self.main_layout.setContentsMargins(10, 10, 10, 10)
 
-        # --- 1. Bölüm: Üst Çubuk (Top Bar) (YENİ DÜZEN) ---
+        # --- 1. Bölüm: Üst Çubuk (Top Bar) ---
         self.top_bar_layout = QHBoxLayout()
 
         self.search_bar = QLineEdit()
@@ -53,7 +53,6 @@ class PromptBankApp(QMainWindow):
         self.create_button.setFixedSize(130, 35)
         self.create_button.clicked.connect(self.open_create_dialog)
 
-        # Sıralama: [Ortalı Arama] [Sağda Butonlar]
         self.top_bar_layout.addStretch(1)
         self.top_bar_layout.addWidget(self.search_bar)
         self.top_bar_layout.addStretch(1)
@@ -155,6 +154,7 @@ class PromptBankApp(QMainWindow):
                 print(f"Error exporting backup: {e}")
                 QMessageBox.critical(self, "Error", f"Could not save backup file: {e}")
 
+    # === DEĞİŞTİRİLEN FONKSİYON ===
     def import_backup(self):
         confirm_title = self.translator.get("import_confirm_title")
         confirm_text = self.translator.get("import_confirm_text")
@@ -174,15 +174,32 @@ class PromptBankApp(QMainWindow):
         if file_path:
             try:
                 with open(file_path, "r", encoding="utf-8") as f:
-                    new_data = json.load(f)
+                    imported_data = json.load(f)
 
-                self.prompts_list = new_data
-                self.save_prompts_to_disk()
-                self.reload_all_prompts()
+                # Başlığa göre birleştirme mantığı
+                current_titles = {prompt.get('title') for prompt in self.prompts_list}
+                new_prompts_added = 0
 
-                QMessageBox.information(self,
-                                        self.translator.get("import_success_title"),
-                                        self.translator.get("import_success_text"))
+                for prompt_data in imported_data:
+                    title = prompt_data.get('title')
+                    if title and title not in current_titles:
+                        self.prompts_list.append(prompt_data)
+                        current_titles.add(title)
+                        new_prompts_added += 1
+
+                # Sadece yeni prompt eklendiyse kaydet ve yeniden yükle
+                if new_prompts_added > 0:
+                    self.save_prompts_to_disk()
+                    self.reload_all_prompts()
+
+                    QMessageBox.information(self,
+                                            self.translator.get("import_success_title"),
+                                            self.translator.get("import_success_text").format(count=new_prompts_added))
+                else:
+                    QMessageBox.information(self,
+                                            self.translator.get("import_success_title"),
+                                            self.translator.get("import_info_no_new"))
+
             except Exception as e:
                 print(f"Error importing backup: {e}")
                 QMessageBox.critical(self,
