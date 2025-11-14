@@ -46,5 +46,13 @@
         "image_path": "C:/COMFYUI/output/AI_00071_.png",
         "is_negative": false,
         "negative_prompt": ""
+    },
+    {
+        "title": "SUNO MOONLIT REVERIE",
+        "is_positive": true,
+        "prompt": "emotional, light orchestral; features strong strings, soundtrack-inspired with japanese era influences, ethereal choir, dramatic, soundtrack, vocal, solo female vocals, cinematic, poetic, slow, melancholic, light, strong, dramatic percussion, female vocals, orchestral",
+        "image_path": "C:/Users/erdem/OneDrive/Masaüstü/x.png",
+        "is_negative": false,
+        "negative_prompt": ""
     }
 ]

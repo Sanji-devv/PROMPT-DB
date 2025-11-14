@@ -13,7 +13,7 @@ class ThemeToggleButton(QPushButton):
     def __init__(self, translator, parent=None):
         super().__init__(parent)
         self.translator = translator
-        self.setFixedSize(130, 35)
+        self.setFixedSize(35    , 35)
         self.setCheckable(True)
         self.clicked.connect(self.update_text)
         self.update_text()
@@ -24,9 +24,9 @@ class ThemeToggleButton(QPushButton):
 
     def update_text(self):
         if self.isChecked():
-            self.setText(self.translator.get("theme_day"))
+            self.setText(self.translator.get("☀️"))
         else:
-            self.setText(self.translator.get("theme_night"))
+            self.setText(self.translator.get("🌙"))
 
     def is_dark_mode(self):
         return self.isChecked()
@@ -291,16 +291,19 @@ class PromptCard(QWidget):
 
         self.main_layout = QVBoxLayout(self)
         self.main_layout.setContentsMargins(0, 0, 0, 0)
-        self.ui_container = None
+        # DEĞİŞİKLİK: self.ui_container -> self.content_widget olarak yeniden adlandırıldı
+        self.content_widget = None
         self.build_ui()
 
     def build_ui(self):
-        if self.ui_container:
-            self.main_layout.removeWidget(self.ui_container)
-            self.ui_container.deleteLater()
+        # DEĞİŞİKLİK: self.ui_container -> self.content_widget olarak yeniden adlandırıldı
+        if self.content_widget:
+            self.main_layout.removeWidget(self.content_widget)
+            self.content_widget.deleteLater()
 
-        self.ui_container = QWidget()
-        card_layout = QVBoxLayout(self.ui_container)
+        # DEĞİŞİKLİK: self.ui_container -> self.content_widget olarak yeniden adlandırıldı
+        self.content_widget = QWidget()
+        card_layout = QVBoxLayout(self.content_widget)
         card_layout.setContentsMargins(0, 0, 0, 0)
         card_layout.setSpacing(0)
 
@@ -327,35 +330,54 @@ class PromptCard(QWidget):
             self.image_label.setText(self.translator.get("placeholder_image"))
         card_layout.addWidget(self.image_label)
 
+        # --- DEĞİŞİKLİK: Başlık (Title) alanı için layout değiştirildi ---
+        # Başlık ve butonları içeren ana widget
         self.title_bar_widget = QWidget()
         self.title_bar_widget.setObjectName("PromptCard")
-        self.title_bar_layout = QHBoxLayout(self.title_bar_widget)
-        self.title_bar_layout.setContentsMargins(10, 10, 10, 10)
 
+        # Ana layout dikey (QVBoxLayout) olacak: Üstte başlık, altta butonlar
+        title_bar_main_layout = QVBoxLayout(self.title_bar_widget)
+        title_bar_main_layout.setContentsMargins(10, 10, 10, 10)
+        title_bar_main_layout.setSpacing(5)  # Başlık ve butonlar arası boşluk
+
+        # Başlık etiketi
         self.title_label = QLabel(title)
         self.title_label.setStyleSheet("font-size: 15pt; font-weight: bold;")
         self.title_label.setWordWrap(True)
-        self.title_bar_layout.addWidget(self.title_label)
-        self.title_bar_layout.addStretch()
+        # Başlığı dikey layout'a ekle (tam genişlik kullanır)
+        title_bar_main_layout.addWidget(self.title_label)
 
+        # Butonlar için yatay (QHBoxLayout) bir layout oluştur
+        button_layout = QHBoxLayout()
+        button_layout.setContentsMargins(0, 0, 0, 0)  # İç layout'ta ekstra margin olmasın
+        button_layout.addStretch()  # Butonları sağa yasla
+
+        # Details butonu
         self.details_button = QPushButton()
-        self.details_button.setFixedSize(110, 25)
+        self.details_button.setFixedSize(90, 25)  # Genişlik 110 -> 90
         self.details_button.clicked.connect(self.open_details_dialog)
-        self.title_bar_layout.addWidget(self.details_button)
+        button_layout.addWidget(self.details_button)
 
+        # Edit butonu
         self.edit_button = QPushButton()
-        self.edit_button.setFixedSize(60, 25);
+        self.edit_button.setFixedSize(50, 25);  # Genişlik 60 -> 50
         self.edit_button.clicked.connect(self.request_edit)
-        self.title_bar_layout.addWidget(self.edit_button)
+        button_layout.addWidget(self.edit_button)
 
+        # Delete butonu
         self.delete_button = QPushButton()
-        self.delete_button.setFixedSize(60, 25);
+        self.delete_button.setFixedSize(75, 25);
         self.delete_button.clicked.connect(self.confirm_delete)
-        self.title_bar_layout.addWidget(self.delete_button)
+        button_layout.addWidget(self.delete_button)
+
+        # Butonların olduğu yatay layout'u, ana dikey layout'a ekle
+        title_bar_main_layout.addLayout(button_layout)
+        # --- DEĞİŞİKLİK SONU ---
 
         card_layout.addWidget(self.title_bar_widget)
 
-        self.main_layout.addWidget(self.ui_container)
+        # DEĞİŞİKLİK: self.ui_container -> self.content_widget olarak yeniden adlandırıldı
+        self.main_layout.addWidget(self.content_widget)
         self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
 
         self.retranslate_card_buttons()
@@ -400,4 +422,5 @@ class PromptCard(QWidget):
         self.edit_requested.emit(self)
 
     def sizeHint(self):
-        return self.ui_container.sizeHint()
+        # DEĞİŞİKLİK: self.ui_container -> self.content_widget olarak yeniden adlandırıldı
+        return self.content_widget.sizeHint()
