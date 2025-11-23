@@ -1,6 +1,8 @@
 import sys
 import json
 import os
+import csv
+import xml.etree.ElementTree as ET
 from PyQt6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QPushButton, QScrollArea, QComboBox, QLineEdit, QMessageBox,
@@ -15,7 +17,7 @@ from utilities import (
     DATA_FILE, SETTINGS_FILE
 )
 from widgets import (
-    ThemeToggleButton, CreatePromptDialog, DetailsDialog, PromptCard
+    ThemeToggleButton, CreatePromptDialog, DetailsDialog, PromptCard, ExportSelectionDialog
 )
 
 
@@ -136,25 +138,181 @@ class PromptBankApp(QMainWindow):
             self.retranslate_ui()
 
     def export_backup(self):
+        # Open the new export dialog
+        dialog = ExportSelectionDialog(self.translator, self)
+        if dialog.exec():
+            selected_format = dialog.get_selected_format()
+            self.perform_export(selected_format)
+
+    def perform_export(self, fmt):
+        # Map format to extension and filter
+        ext_map = {
+            "json": ("json", "JSON Files (*.json)"),
+            "xml": ("xml", "XML Files (*.xml)"),
+            "csv": ("csv", "CSV Files (*.csv)"),
+            "yaml": ("yaml", "YAML Files (*.yaml)"),
+            "html": ("html", "HTML Files (*.html)"),
+            "md": ("md", "Markdown Files (*.md)"),
+            "txt": ("txt", "Text Files (*.txt)")
+        }
+        
+        if fmt not in ext_map:
+            return
+            
+        ext, filter_str = ext_map[fmt]
         title = self.translator.get("export_dialog_title")
-        filter = self.translator.get("export_dialog_filter")
+        
+        save_path, _ = QFileDialog.getSaveFileName(self, title, f"prompt_bank_backup.{ext}", filter_str)
+        
+        if not save_path:
+            return
+            
+        try:
+            if fmt == "json":
+                self.export_to_json(save_path)
+            elif fmt == "xml":
+                self.export_to_xml(save_path)
+            elif fmt == "csv":
+                self.export_to_csv(save_path)
+            elif fmt == "yaml":
+                self.export_to_yaml(save_path)
+            elif fmt == "html":
+                self.export_to_html(save_path)
+            elif fmt == "md":
+                self.export_to_md(save_path)
+            elif fmt == "txt":
+                self.export_to_txt(save_path)
+                
+            QMessageBox.information(self,
+                                    self.translator.get("export_success_title"),
+                                    self.translator.get("export_success_text"))
+            print(f"Exported to {save_path} as {fmt}")
+            
+        except Exception as e:
+            print(f"Error exporting to {fmt}: {e}")
+            QMessageBox.critical(self, "Error", f"Could not export file: {e}")
 
-        save_path, _ = QFileDialog.getSaveFileName(self, title, "prompt_bank_backup.json", filter)
+    def export_to_json(self, filename):
+        with open(filename, "w", encoding="utf-8") as f:
+            json.dump(self.prompts_list, f, indent=4, ensure_ascii=False)
 
-        if save_path:
-            try:
-                with open(save_path, "w", encoding="utf-8") as f:
-                    json.dump(self.prompts_list, f, indent=4, ensure_ascii=False)
+    def export_to_xml(self, filename):
+        root = ET.Element("prompts")
+        for prompt in self.prompts_list:
+            prompt_elem = ET.SubElement(root, "prompt")
+            for key, value in prompt.items():
+                child = ET.SubElement(prompt_elem, key)
+                child.text = str(value)
+        
+        tree = ET.ElementTree(root)
+        ET.indent(tree, space="    ", level=0)
+        tree.write(filename, encoding="utf-8", xml_declaration=True)
 
-                QMessageBox.information(self,
-                                        self.translator.get("export_success_title"),
-                                        self.translator.get("export_success_text"))
-                print(f"Backup exported to {save_path}")
-            except Exception as e:
-                print(f"Error exporting backup: {e}")
-                QMessageBox.critical(self, "Error", f"Could not save backup file: {e}")
+    def export_to_csv(self, filename):
+        if not self.prompts_list:
+            return
+        
+        all_keys = set()
+        for prompt in self.prompts_list:
+            all_keys.update(prompt.keys())
+        
+        fieldnames = sorted(list(all_keys))
+        
+        with open(filename, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames, restval="")
+            writer.writeheader()
+            writer.writerows(self.prompts_list)
 
-    # === DEĞİŞTİRİLEN FONKSİYON ===
+    def export_to_yaml(self, filename):
+        # Simple custom YAML dumper to avoid dependencies
+        with open(filename, "w", encoding="utf-8") as f:
+            for prompt in self.prompts_list:
+                f.write("- ")
+                first = True
+                for key, value in prompt.items():
+                    if not first:
+                        f.write("  ")
+                    f.write(f"{key}: ")
+                    # Handle multiline strings or special chars simply
+                    val_str = str(value)
+                    if "\n" in val_str or ":" in val_str:
+                        # Block style for multiline
+                        f.write("|\n")
+                        for line in val_str.splitlines():
+                            f.write(f"    {line}\n")
+                    else:
+                        f.write(f"{val_str}\n")
+                    first = False
+                f.write("\n")
+
+    def export_to_html(self, filename):
+        html_content = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Bank Export</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f0f0f0; }
+        .card { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .title { font-size: 1.2em; font-weight: bold; margin-bottom: 10px; color: #333; }
+        .field { margin-bottom: 5px; }
+        .label { font-weight: bold; color: #666; }
+        .value { white-space: pre-wrap; }
+        .positive { color: green; }
+        .negative { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Prompt Bank Export</h1>
+"""
+        for prompt in self.prompts_list:
+            html_content += '    <div class="card">\n'
+            title = prompt.get("title", "No Title")
+            html_content += f'        <div class="title">{title}</div>\n'
+            
+            for key, value in prompt.items():
+                if key == "title": continue
+                val_str = str(value)
+                if not val_str: continue
+                
+                cls = "value"
+                if key == "prompt": cls += " positive"
+                if key == "negative_prompt": cls += " negative"
+                
+                html_content += f'        <div class="field"><span class="label">{key}:</span> <span class="{cls}">{val_str}</span></div>\n'
+            html_content += '    </div>\n'
+            
+        html_content += "</body>\n</html>"
+        
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write(html_content)
+
+    def export_to_md(self, filename):
+        with open(filename, "w", encoding="utf-8") as f:
+            f.write("# Prompt Bank Export\n\n")
+            for prompt in self.prompts_list:
+                title = prompt.get("title", "No Title")
+                f.write(f"## {title}\n")
+                for key, value in prompt.items():
+                    if key == "title": continue
+                    val_str = str(value)
+                    if not val_str: continue
+                    f.write(f"**{key}:**\n{val_str}\n\n")
+                f.write("---\n\n")
+
+    def export_to_txt(self, filename):
+        with open(filename, "w", encoding="utf-8") as f:
+            for prompt in self.prompts_list:
+                title = prompt.get("title", "No Title")
+                f.write(f"=== {title} ===\n")
+                for key, value in prompt.items():
+                    if key == "title": continue
+                    val_str = str(value)
+                    if not val_str: continue
+                    f.write(f"{key}: {val_str}\n")
+                f.write("\n" + "="*30 + "\n\n")
+
     def import_backup(self):
         confirm_title = self.translator.get("import_confirm_title")
         confirm_text = self.translator.get("import_confirm_text")

@@ -7,6 +7,11 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtGui import QPixmap
 from PyQt6.QtCore import Qt, pyqtSignal, QSize
+from PyQt6.QtWidgets import (
+    QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton,
+    QTextEdit, QDialog, QLineEdit, QFileDialog, QCheckBox,
+    QMessageBox, QSizePolicy, QApplication, QRadioButton, QButtonGroup
+)
 
 
 class ThemeToggleButton(QPushButton):
@@ -424,3 +429,52 @@ class PromptCard(QWidget):
     def sizeHint(self):
         # DEĞİŞİKLİK: self.ui_container -> self.content_widget olarak yeniden adlandırıldı
         return self.content_widget.sizeHint()
+
+
+class ExportSelectionDialog(QDialog):
+    def __init__(self, translator, parent=None):
+        super().__init__(parent)
+        self.translator = translator
+        self.selected_format = "json"
+        
+        self.setWindowTitle(self.translator.get("dialog_export_title"))
+        self.setMinimumWidth(300)
+        
+        layout = QVBoxLayout(self)
+        
+        label = QLabel(self.translator.get("label_select_format"))
+        layout.addWidget(label)
+        
+        self.button_group = QButtonGroup(self)
+        
+        formats = [
+            ("json", "radio_json"),
+            ("xml", "radio_xml"),
+            ("csv", "radio_csv"),
+            ("yaml", "radio_yaml"),
+            ("html", "radio_html"),
+            ("md", "radio_md"),
+            ("txt", "radio_txt")
+        ]
+        
+        for fmt_code, trans_key in formats:
+            radio = QRadioButton(self.translator.get(trans_key))
+            self.button_group.addButton(radio)
+            layout.addWidget(radio)
+            if fmt_code == "json":
+                radio.setChecked(True)
+            
+            # Store format code in the button for retrieval
+            radio.setProperty("format", fmt_code)
+            
+        self.button_group.buttonClicked.connect(self.on_format_selected)
+        
+        export_btn = QPushButton(self.translator.get("button_export_confirm"))
+        export_btn.clicked.connect(self.accept)
+        layout.addWidget(export_btn)
+        
+    def on_format_selected(self, button):
+        self.selected_format = button.property("format")
+        
+    def get_selected_format(self):
+        return self.selected_format
